@@ -56,6 +56,11 @@ with sync_playwright() as p:
         expect(dialog).to_have_count(0)
         assert page.evaluate('document.body.style.overflow')==''
     page.goto(BASE,wait_until='networkidle')
+    page.goto(BASE+'#project/transcript',wait_until='networkidle')
+    expect(page.get_by_role('dialog').get_by_text('Source repository is private.',exact=True)).to_be_visible()
+    expect(page.get_by_role('dialog').get_by_role('link',name='View on GitHub')).to_have_count(0)
+    page.keyboard.press('Escape')
+    page.goto(BASE,wait_until='networkidle')
     for category in ['AI & ML','Data & Analytics','Software','All projects']:
         page.get_by_role('button',name=category,exact=True).click()
         expect(page.locator('.technical-card').first).to_be_visible()

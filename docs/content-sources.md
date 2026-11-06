@@ -6,6 +6,8 @@ Professional history, education, training, languages, technical projects, reposi
 
 No extra professional roles, certifications, software proficiency, achievements or client claims have been introduced. Project summary wording has been shortened for the website. Technical project screenshots and two repository URLs remain explicitly labeled as missing. No fabricated technical screenshots are displayed.
 
+The seven repository URLs in the master CV were checked with the authenticated GitHub API. Six are public. TranscriptExtension is private, so its project details explicitly say so and do not offer visitors a broken public repository button. Repository visibility has not been changed.
+
 Adobe Premiere Pro and CapCut are labeled as previously used. No video project or empty video category is displayed. AI image generation is listed as a verified skill; no generated replacement artwork has been created for this website.
 
 ## Canva projects

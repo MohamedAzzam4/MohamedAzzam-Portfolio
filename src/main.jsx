@@ -229,10 +229,13 @@ function Gallery({ project, onClose }) {
               )}
             </>
           )}
-          {project.github && (
+          {project.github && project.repositoryVisibility !== "private" && (
             <External href={project.github} className="button primary">
               <Github size={18} /> View on GitHub <ArrowUpRight size={17} />
             </External>
+          )}
+          {project.repositoryVisibility === "private" && (
+            <p className="placeholder-note">Source repository is private.</p>
           )}
           {project.linkPlaceholder && (
             <p className="placeholder-note">{project.linkPlaceholder}</p>

@@ -81,6 +81,7 @@ export const technicalProjects = [
     description:
       "Browser language-learning tools with caption retrieval, local transcription, bilingual subtitles, caching and diagnostics. Evaluated through browser checks and regression tests.",
     github: "https://github.com/MohamedAzzam4/TranscriptExtension",
+    repositoryVisibility: "private",
     image: null,
     imagePlaceholder: "Project screenshot to be added",
     accent: "lavender",
