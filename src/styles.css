@@ -415,23 +415,47 @@ button {
 .discipline-strip {
   border-block: 1px solid var(--border);
   background: var(--surface);
+  overflow: hidden;
 }
-.discipline-strip > .container {
+.marquee-window {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+.marquee-track {
   display: flex;
+  width: max-content;
+  animation: marquee-travel 36s linear infinite;
+}
+.marquee-group {
+  display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  min-height: 68px;
+  gap: 48px;
+  min-width: max(1080px, 100vw);
+  min-height: 76px;
+  padding-inline: 40px;
 }
 .discipline-strip span {
   font-size: 10px;
   letter-spacing: 1.6px;
   font-weight: 500;
+  white-space: nowrap;
 }
 .discipline-strip .strip-star {
-  font-size: 25px;
-  font-weight: 400;
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
   color: #688244;
+}
+.discipline-strip:hover .marquee-track {
+  animation-play-state: paused;
 }
 .section-heading {
   display: flex;
@@ -779,7 +803,7 @@ h3 {
   margin-top: 24px;
 }
 .about-orbit {
-  height: 210px;
+  height: 230px;
   width: 290px;
   position: relative;
   margin-top: 28px;
@@ -790,9 +814,10 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 50%;
   position: absolute;
-  left: 45px;
-  top: 18px;
+  left: 60px;
+  top: 30px;
   transform: rotate(-25deg);
+  animation: orbit-rings-turn 42s linear infinite;
 }
 .orbit-ring:after {
   content: "";
@@ -803,31 +828,46 @@ h3 {
 }
 .orbit-core {
   position: absolute;
-  top: 65px;
-  left: 98px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 45px;
   font-family: var(--serif);
   font-style: italic;
 }
 .orbit-label {
   position: absolute;
+  left: 50%;
+  top: 0;
+  white-space: nowrap;
   font-size: 10px;
   background: var(--bg);
   padding: 7px 12px;
   border: 1px solid var(--border);
   border-radius: 20px;
+  transform: translate(-50%, -50%) rotate(calc(0deg - var(--orbit-phase)));
+  animation: orbit-label-counterturn 28s linear infinite;
+}
+.orbit-runner {
+  position: absolute;
+  left: 55px;
+  top: 25px;
+  width: 180px;
+  height: 180px;
+  transform: rotate(var(--orbit-phase));
+  animation: orbit-label-travel 28s linear infinite;
 }
 .orbit-ai {
-  left: 9px;
-  top: 45px;
+  --orbit-phase: -65deg;
 }
 .orbit-data {
-  right: 14px;
-  top: 87px;
+  --orbit-phase: 90deg;
 }
 .orbit-design {
-  left: 70px;
-  bottom: 12px;
+  --orbit-phase: 200deg;
+}
+.about-orbit:hover .ambient-motion {
+  animation-play-state: paused;
 }
 .about-content {
   padding-top: 40px;
@@ -1509,16 +1549,8 @@ h3 {
     font-size: 7px;
     letter-spacing: 1px;
   }
-  .discipline-strip > .container {
-    min-height: 86px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 17px 12px;
-    padding-block: 17px;
-    text-align: center;
-  }
-  .discipline-strip .strip-star {
-    display: none;
+  .marquee-group {
+    min-height: 64px;
   }
   .discipline-strip span {
     font-size: 8px;
@@ -1658,7 +1690,7 @@ h3 {
     margin-top: 20px;
   }
   .about-orbit {
-    display: none;
+    display: block;
   }
   .about-content {
     padding-top: 0;
@@ -1884,7 +1916,102 @@ h3 {
     font-size: 53px;
   }
 }
+.portrait-frame.ambient-motion {
+  animation: portrait-float 8s ease-in-out infinite;
+}
+.floating-label.ambient-motion {
+  z-index: 3;
+  animation: label-float 6s ease-in-out infinite;
+}
+.hero-spark.ambient-motion {
+  z-index: 3;
+  animation: spark-turn 48s linear infinite;
+}
+.motion-toggle[aria-pressed="true"] {
+  background: var(--surface);
+}
+:is(.motion-paused, .tab-inactive) .ambient-motion,
+[data-motion-scene][data-motion-visible="false"] .ambient-motion {
+  animation-play-state: paused;
+}
+@keyframes portrait-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes label-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-5deg);
+  }
+  50% {
+    transform: translate3d(7px, -13px, 0) rotate(-2deg);
+  }
+}
+@keyframes spark-turn {
+  from {
+    transform: rotate(15deg);
+  }
+  to {
+    transform: rotate(375deg);
+  }
+}
+@keyframes marquee-travel {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes orbit-rings-turn {
+  from {
+    transform: rotate(-25deg);
+  }
+  to {
+    transform: rotate(335deg);
+  }
+}
+@keyframes orbit-label-travel {
+  from {
+    transform: rotate(var(--orbit-phase));
+  }
+  to {
+    transform: rotate(calc(var(--orbit-phase) + 360deg));
+  }
+}
+@keyframes orbit-label-counterturn {
+  from {
+    transform: translate(-50%, -50%) rotate(calc(0deg - var(--orbit-phase)));
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(calc(-360deg - var(--orbit-phase)));
+  }
+}
 @media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
+  .marquee-window {
+    mask-image: none;
+  }
+  .marquee-track {
+    width: 100%;
+    transform: none;
+  }
+  .marquee-group {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px 28px;
+    padding: 22px;
+  }
+  .marquee-group[aria-hidden="true"],
+  .discipline-strip .strip-star {
+    display: none;
+  }
   html {
     scroll-behavior: auto;
   }

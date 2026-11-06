@@ -29,6 +29,8 @@ import {
   ChevronRight,
   Check,
   Copy,
+  Pause,
+  Play,
 } from "lucide-react";
 import {
   profile,
@@ -56,6 +58,12 @@ const iconMap = {
   search: Search,
 };
 const allProjects = [...technicalProjects, ...creativeProjects];
+const disciplines = [
+  "INTELLIGENT SYSTEMS",
+  "MEANINGFUL DATA",
+  "THOUGHTFUL DESIGN",
+  "CLEAR COMMUNICATION",
+];
 const External = ({ href, children, className = "", ...props }) => (
   <a
     href={href}
@@ -270,6 +278,13 @@ function App() {
     document.documentElement.classList.contains("dark") ? "dark" : "light",
   );
   const [menu, setMenu] = useState(false);
+  const [motionPaused, setMotionPaused] = useState(() => {
+    try {
+      return localStorage.getItem("azzam-motion-paused") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [techFilter, setTechFilter] = useState("All projects");
   const [creativeFilter, setCreativeFilter] = useState("All work");
   const [expanded, setExpanded] = useState(false);
@@ -285,6 +300,37 @@ function App() {
       localStorage.setItem("azzam-theme", theme);
     } catch {}
   }, [theme]);
+  useEffect(() => {
+    document.documentElement.classList.toggle("motion-paused", motionPaused);
+    try {
+      localStorage.setItem("azzam-motion-paused", String(motionPaused));
+    } catch {}
+  }, [motionPaused]);
+  useEffect(() => {
+    const scenes = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((entry) => {
+          entry.target.dataset.motionVisible = String(entry.isIntersecting);
+        }),
+      { rootMargin: "80px" },
+    );
+    document
+      .querySelectorAll("[data-motion-scene]")
+      .forEach((el) => scenes.observe(el));
+    const handleVisibility = () => {
+      document.documentElement.classList.toggle(
+        "tab-inactive",
+        document.hidden,
+      );
+    };
+    handleVisibility();
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      scenes.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+      document.documentElement.classList.remove("tab-inactive");
+    };
+  }, []);
   useEffect(() => {
     const change = () => {
       setProjectId(
@@ -367,6 +413,17 @@ function App() {
           </nav>
           <div className="header-actions">
             <button
+              className="icon-button motion-toggle"
+              onClick={() => setMotionPaused((paused) => !paused)}
+              aria-label={
+                motionPaused ? "Resume animations" : "Pause animations"
+              }
+              aria-pressed={motionPaused}
+              title={motionPaused ? "Resume animations" : "Pause animations"}
+            >
+              {motionPaused ? <Play size={17} /> : <Pause size={17} />}
+            </button>
+            <button
               className="icon-button theme-toggle"
               onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
@@ -418,8 +475,8 @@ function App() {
               <span>AI · Data · Design</span>
             </div>
           </div>
-          <div className="hero-visual">
-            <div className="portrait-frame">
+          <div className="hero-visual" data-motion-scene>
+            <div className="portrait-frame ambient-motion">
               <img
                 src={asset(profile.photo)}
                 alt="Mohamed Azzam smiling outdoors"
@@ -435,7 +492,7 @@ function App() {
                 </span>
               </div>
             </div>
-            <div className="floating-label">
+            <div className="floating-label ambient-motion">
               <Sparkles size={19} />
               <span>
                 At the intersection of
@@ -447,7 +504,7 @@ function App() {
               01 / A WORK IN PROGRESS, ALWAYS.
             </span>
             <svg
-              className="hero-spark"
+              className="hero-spark ambient-motion"
               viewBox="0 0 80 80"
               fill="none"
               aria-hidden="true"
@@ -460,15 +517,35 @@ function App() {
             </svg>
           </div>
         </section>
-        <div className="discipline-strip">
-          <div className="container">
-            <span>INTELLIGENT SYSTEMS</span>
-            <span className="strip-star">✳</span>
-            <span>MEANINGFUL DATA</span>
-            <span className="strip-star">✳</span>
-            <span>THOUGHTFUL DESIGN</span>
-            <span className="strip-star">✳</span>
-            <span>CLEAR COMMUNICATION</span>
+        <div className="discipline-strip" data-motion-scene>
+          <div className="marquee-window">
+            <div className="marquee-track ambient-motion">
+              {[0, 1].map((copy) => (
+                <div
+                  className="marquee-group"
+                  key={copy}
+                  aria-hidden={copy === 1 ? true : undefined}
+                >
+                  {disciplines.map((discipline) => (
+                    <React.Fragment key={discipline}>
+                      <span>{discipline}</span>
+                      <svg
+                        className="strip-star"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M20 2v36M2 20h36M7 7l26 26M7 33 33 7"
+                          stroke="currentColor"
+                          strokeWidth="1.3"
+                        />
+                      </svg>
+                    </React.Fragment>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -674,12 +751,18 @@ function App() {
               <br />
               the <em>dots.</em>
             </h2>
-            <div className="about-orbit" aria-hidden="true">
-              <div className="orbit-ring" />
+            <div className="about-orbit" aria-hidden="true" data-motion-scene>
+              <div className="orbit-ring ambient-motion" />
               <span className="orbit-core">ma.</span>
-              <span className="orbit-label orbit-ai">AI & code</span>
-              <span className="orbit-label orbit-data">Data</span>
-              <span className="orbit-label orbit-design">Design</span>
+              <div className="orbit-runner orbit-ai ambient-motion">
+                <span className="orbit-label ambient-motion">AI & code</span>
+              </div>
+              <div className="orbit-runner orbit-data ambient-motion">
+                <span className="orbit-label ambient-motion">Data</span>
+              </div>
+              <div className="orbit-runner orbit-design ambient-motion">
+                <span className="orbit-label ambient-motion">Design</span>
+              </div>
             </div>
           </div>
           <div className="about-content reveal">

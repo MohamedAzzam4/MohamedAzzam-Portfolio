@@ -9,3 +9,13 @@ The generated master provided the portfolio grid, filtering, responsive, perform
 - Spacious editorial sections, fine rules, numbered eyebrows, and asymmetric portrait composition.
 - Restrained entrance and hover motion; disable transitions and smooth scrolling for reduced-motion preferences.
 - Native modal dialogs provide focus containment and Escape support. Use hash project URLs for GitHub Pages compatibility.
+
+## Ambient motion
+
+- User-requested continuous motion: a subtle 8-second portrait float, a 6-second floating badge, and a slow 48-second accent rotation.
+- About labels orbit in 28 seconds with an equal counter-rotation to keep text upright. The diagram is visible on mobile too.
+- The discipline strip uses two identical groups and a 36-second linear half-track translation for a seamless marquee. The repeated group is hidden from assistive technology.
+- Header pause/resume control freezes all ambient animation and persists the preference. Hover also pauses the marquee and orbit locally.
+- Pause scenes outside the viewport and animation in inactive browser tabs.
+- Reduced-motion preference removes all animation, hides the unnecessary motion toggle and shows one complete static set of discipline labels.
+- All animation uses CSS transforms; no extra motion library or per-frame JavaScript is needed.
