@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://MohamedAzzam4.github.io/MohamedAzzam-Portfolio/sitemap.xml
